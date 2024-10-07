@@ -40,20 +40,30 @@ F2CField Parser::importFieldGml(const std::string& file, bool coord_frame_fail_s
   }
 
   // auto* p_field = p_parcel->FirstChildElement("Field");
+
+  // auto* p_polygon = p_field
+  //           ->FirstChildElement("geometry")
+  //           ->FirstChildElement("gml:Polygon");
+
   auto* p_field = p_parcel->FirstChildElement("gml:featureMember");
 
   auto* p_polygon = p_field\
-            ->FirstChildElement("ogr:Untitled")\
+            ->FirstChildElement("ogr:paddock")\
             ->FirstChildElement("ogr:geometryProperty")\
-            ->FirstChildElement("gml:Polygon");
+            ->FirstChildElement("gml:LineString");
 
   std::string coord_sys = p_polygon->Attribute("srsName");
 
+  // std::string p_coords = std::string(
+  //           p_polygon->FirstChildElement("gml:outerBoundaryIs")
+  //           ->FirstChildElement("gml:LinearRing")
+  //           ->FirstChildElement("gml:coordinates")
+  //           ->GetText());
+
   std::string p_coords = std::string(
-            p_polygon->FirstChildElement("gml:outerBoundaryIs")\
-            ->FirstChildElement("gml:LinearRing")\
-            ->FirstChildElement("gml:coordinates")\
-            ->GetText());
+          p_polygon->FirstChildElement("gml:coordinates")\
+          ->GetText());
+
   auto findAndReplaceAll =
       [](std::string& data, std::string toSearch, std::string replaceStr) {
             size_t pos = data.find(toSearch);
